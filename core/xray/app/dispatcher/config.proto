@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package npsc.core.app.dispatcher;
+option csharp_namespace = "NPSc.core.app.dispatcher";
+option go_package = "github.com/NPScProject/NPSc/core/xray/app/dispatcher";
+option java_package = "com.npsc.core.app.dispatcher";
+option java_multiple_files = true;
+
+message SessionConfig {
+  reserved 1;
+}
+
+message Config {
+  SessionConfig settings = 1;
+}
