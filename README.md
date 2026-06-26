@@ -78,7 +78,34 @@ NPSc update       # 更新
 NPSc uninstall    # 卸载
 ```
 
-### 手动安装## 编译安装
+### 手动安装
+
+1. 从 [Releases](https://github.com/XTBANNY/NPSc/releases) 下载 
+
+2. 解压并安装（注意：Release 包是 zip 格式，内层有 NPSc/ 子目录）：
+
+
+3. 如果 Release 包不含 geoip/geosite，手动下载：
+
+
+4. 如果使用 sing 核心，创建 sing_origin.json：
+
+
+5. 编辑配置文件 ，修改 ApiHost、ApiKey、NodeID、NodeType 等
+
+6. 创建 systemd 服务并启动：
+
+
+7. 验证：
+
+
+> **常见错误**：
+>  → 执行步骤4
+>  → 执行步骤3
+>  → 用 （注意嵌套目录）
+>  → 检查 JSON 格式
+
+## 编译安装
 
 确保已安装 [Go 1.25](https://go.dev/) 或更高版本：
 
