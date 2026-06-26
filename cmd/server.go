@@ -37,7 +37,7 @@ func init() {
 }
 
 func serverHandle(_ *cobra.Command, _ []string) {
-	showVersion()
+	//showVersion()
 	c := conf.New()
 	err := c.LoadFromPath(config)
 	if err != nil {
