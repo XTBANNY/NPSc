@@ -80,8 +80,6 @@ NPSc uninstall    # 卸载
 
 ### 手动安装
 
-如果不想用一键安装脚本，也可以手动安装：
-
 1. 从 [Releases](https://github.com/XTBANNY/NPSc/releases) 下载对应平台的二进制文件
 
 2. 解压并移动：
@@ -101,12 +99,18 @@ sudo cp example/*.json /etc/NPSc/
 sudo tee /etc/systemd/system/NPSc.service << 'EOF'
 [Unit]
 Description=NPSc Service
-After=network.target
+After=network.target nss-lookup.target
+Wants=network.target
 
 [Service]
 User=root
+Group=root
 Type=simple
+LimitAS=infinity
+LimitRSS=infinity
+LimitCORE=infinity
 LimitNOFILE=999999
+WorkingDirectory=/etc/NPSc/
 ExecStart=/usr/local/bin/NPSc server --config /etc/NPSc/config.json
 Restart=always
 RestartSec=10
