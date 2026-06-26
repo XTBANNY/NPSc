@@ -80,30 +80,94 @@ NPSc uninstall    # 卸载
 
 ### 手动安装
 
-1. 从 [Releases](https://github.com/XTBANNY/NPSc/releases) 下载 
+1. 从 [Releases](https://github.com/XTBANNY/NPSc/releases) 下载 `NPSc-linux-64.zip`
 
 2. 解压并安装（注意：Release 包是 zip 格式，内层有 NPSc/ 子目录）：
 
+```bash
+unzip NPSc-linux-64.zip
+mv NPSc/NPSc /usr/local/bin/NPSc
+chmod +x /usr/local/bin/NPSc
+mkdir -p /etc/NPSc/
+cp NPSc/*.json /etc/NPSc/
+cp NPSc/*.dat /etc/NPSc/ 2>/dev/null
+cp NPSc/*.db /etc/NPSc/ 2>/dev/null
+rm -rf NPSc
+```
 
 3. 如果 Release 包不含 geoip/geosite，手动下载：
 
+```bash
+wget -O /etc/NPSc/geoip.dat https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geoip.dat
+wget -O /etc/NPSc/geosite.dat https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geosite.dat
+```
 
-4. 如果使用 sing 核心，创建 sing_origin.json：
+4. 如果使用 sing 核心，创建 `sing_origin.json`：
 
+```bash
+cat > /etc/NPSc/sing_origin.json << 'EOF'
+{
+  "dns": {
+    "servers": [{"tag": "cf", "address": "1.1.1.1"}],
+    "strategy": "ipv4_only"
+  },
+  "outbounds": [
+    {"tag": "direct", "type": "direct"},
+    {"type": "block", "tag": "block"}
+  ],
+  "route": {
+    "rules": [
+      {"ip_is_private": true, "outbound": "block"},
+      {"outbound": "direct", "network": ["udp","tcp"]}
+    ]
+  }
+}
+EOF
+```
 
-5. 编辑配置文件 ，修改 ApiHost、ApiKey、NodeID、NodeType 等
+5. 编辑配置文件 `/etc/NPSc/config.json`，修改 ApiHost、ApiKey、NodeID、NodeType 等
 
 6. 创建 systemd 服务并启动：
 
+```bash
+cat > /etc/systemd/system/NPSc.service << 'EOF'
+[Unit]
+Description=NPSc Service
+After=network.target nss-lookup.target
+Wants=network.target
 
-7. 验证：
+[Service]
+User=root
+Group=root
+Type=simple
+LimitNOFILE=65535
+WorkingDirectory=/etc/NPSc/
+ExecStart=/usr/local/bin/NPSc server --config /etc/NPSc/config.json
+Restart=always
+RestartSec=10
 
+[Install]
+WantedBy=multi-user.target
+EOF
 
-> **常见错误**：
->  → 执行步骤4
->  → 执行步骤3
->  → 用 （注意嵌套目录）
->  → 检查 JSON 格式
+systemctl daemon-reload
+systemctl enable NPSc
+systemctl start NPSc
+```
+
+7. 验证运行：
+
+```bash
+systemctl status NPSc
+journalctl -u NPSc -f
+```
+
+> **常见错误排查**：
+> - `open sing_origin.json: no such file` → 执行步骤4
+> - `Failed to load GeoIP: geoip.dat` → 执行步骤3
+> - `Is a directory` → 用 `mv NPSc/NPSc /usr/local/bin/NPSc`（注意嵌套目录）
+> - `Load config file failed` → 检查 JSON 格式
+
 
 ## 编译安装
 
