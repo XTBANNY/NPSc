@@ -1,1 +1,0 @@
-{"dns":{"servers":[{"tag":"cf","address":"1.1.1.1"}],"strategy":"ipv4_only"},"outbounds":[{"tag":"direct","type":"direct"},{"type":"block","tag":"block"}],"route":{"rules":[{"ip_is_private":true,"outbound":"block"},{"outbound":"direct","network":["udp","tcp"]}]}}
