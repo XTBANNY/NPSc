@@ -78,52 +78,7 @@ NPSc update       # 更新
 NPSc uninstall    # 卸载
 ```
 
-### 手动安装
-
-1. 从 [Releases](https://github.com/XTBANNY/NPSc/releases) 下载对应平台的二进制文件
-
-2. 解压并移动：
-
-```bash
-tar -xzf NPSc-linux-64.zip
-sudo mv NPSc /usr/local/bin/
-sudo mkdir -p /etc/NPSc/
-sudo cp example/*.json /etc/NPSc/
-```
-
-3. 编辑配置文件 `/etc/NPSc/config.json`
-
-4. 创建 systemd 服务文件：
-
-```bash
-sudo tee /etc/systemd/system/NPSc.service << 'EOF'
-[Unit]
-Description=NPSc Service
-After=network.target nss-lookup.target
-Wants=network.target
-
-[Service]
-User=root
-Group=root
-Type=simple
-LimitAS=infinity
-LimitRSS=infinity
-LimitCORE=infinity
-LimitNOFILE=999999
-WorkingDirectory=/etc/NPSc/
-ExecStart=/usr/local/bin/NPSc server --config /etc/NPSc/config.json
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable --now NPSc
-```
-
-## 编译安装
+### 手动安装## 编译安装
 
 确保已安装 [Go 1.25](https://go.dev/) 或更高版本：
 
